@@ -1,0 +1,161 @@
+<!-- 选择素材  Modal -->
+<div class="modal fade MaterialChooseModal material_box" id="MaterialChooseModal" tabindex="-1" role="dialog" aria-labelledby="MaterialChooseModal" data-type="1">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="MaterialChooseModal">素材库</h4>
+            <div class="input-item" style="cursor:pointer;position: absolute;top:10px;right: 70px;">
+                <div class="form-control material-modal-right-input right-material-file" id="daterange_btn_header" name="daterange-btn_enquiries" style="cursor:pointer">
+                                            <span style="display:inline-block;padding-right:5px;">
+                                                <span style="color:#aaa;"><?= $jwt['selected_date']['search_date'] ?: '所有日期'?></span>
+                                            </span>
+                    <input type="hidden" value="<?= $jwt['selected_date']['search_date'] ?? ''?>" name="search_date">
+                    <i class="fa fa-caret-down"></i>
+                </div>
+                <div class="input-item material-modal-right-input right-material-folder">
+                    <input type="text" class="form-control" value="<?= $jwt['selected_keywords'] ?? ''?>" name="material-keywords" placeholder = '输入文件/文件夹名'>
+            </div>
+                </div>
+    
+                </div>
+                <div class="modal-body row">
+            <div class="col-md-9 contentMaterbox_left">
+                <div class="nolist" style="display:none;">
+                  您还没有开通全网通网站，开通网站后将可以调用网站内容。
+                  <a href="#" class="btn btn-default">去开通</a>
+                </div>
+                <div class="release material-item-len" style="max-height:450px;overflow: auto; ">
+                    <?php if (!empty($jwt['file_category'])) :?>
+                  <?php foreach ($jwt['file_category'] as $cate) { ?>
+                    <?php if ($cate['name']) { ?>
+                      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                        <label class="Material_item">
+                          <a href="javascript:;" onclick="selectCategory(<?= $cate['id']; ?>);">
+                            <img src="../assets/images/file.png" alt="">
+                            <div class="title"><?= $cate['name']; ?></div>
+                          </a>
+                        
+                          <input value="<?= $cate['id']; ?>||<?= $cate['name']; ?>||nourl||nourl||1" name="current[material_file_category_id]" type="checkbox">
+                        </label>
+                      </div>
+                    <?php }} ?>
+                    <?php endif;?>
+    
+                    <?php if (!empty($jwt['file_list'])) :?>
+                    <?php foreach ($jwt['file_list'] as $file) { ?>
+                    <?php if ($file['name']) { ?>
+                      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                        <label class="Material_item">
+                          <img src="<?= $file['url']; ?>" alt="">
+                          <div class="title"><?=$file['title'] ? $file['title'] : $file['original_name'];?></div>
+                          <input value="<?= $file['id']; ?> || <?= $file['title']; ?> || <?= $file['url'];?> || <?= $file['class_id'];?> || 2" name="current[material_file_id][]" type="checkbox">
+                        </label>
+                      </div>
+                    <?php }} ?>
+                    <?php endif;?>
+                          <div class="clearfix"></div>
+                </div>
+              </div>
+    
+    
+              <div class="col-md-3 contentMaterbox_right">
+                  <div class="choice_doc">
+                     <div class="alreadyChk">已选<span>0</span>条</div>
+                         <form action="" id="material-modal-right-form">
+                             <input type="hidden" name="_csrf" value="<?= Yii::$app->request->getCsrfToken(); ?>">
+                             <input type="hidden" name="site_id" value="">
+                                     <input type="hidden" name="class_id" value="">
+                             <input type="hidden" name="page" value="">
+                             <input type="hidden" name="size" value="">
+                                     <input type="hidden" name="start_time" value="<?= $jwt['selected_date']['start_time'] ?? ''?>">
+                                     <input type="hidden" name="end_time" value="<?= $jwt['selected_date']['end_time'] ?? ''?>">
+                                     <input type="hidden" name="keywords" value="<?= $jwt['selected_keywords'] ?? ''?>">
+                             <div class="choice_item material-modal-right-input right-material-file right-material-folder">
+                                 <p>来源</p>
+                                         <div class="item clearfix">
+                                     <span>全网通上传</span>
+                                    <label class="checkbutton pull-right ">
+                                        <input type="checkbox" name="source_type[]" value="<?=MaterialFile::SOURCE_TYPE_GMS?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                            </label>
+                                     
+                                 </div>
+                                 <div class="item clearfix">
+                                     <span>聚外通上传</span>
+                                     <label class="checkbutton pull-right ">
+                                        <input type="checkbox" name="source_type[]" value="<?=MaterialFile::SOURCE_TYPE_JWT?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                             </div>
+                             <div class="choice_item material-modal-right-input right-material-file">
+                                         <p class="type_choice">类型
+                                           <span class="allChk">全选</span>
+                                           <input type="hidden" name="material_type[]" value="">
+                                          </p>
+                                        
+                                 <div class="item clearfix">
+                                     <span>图片</span>
+                                     <label class="checkbutton pull-right ">
+                                        <input type="checkbox" name="material_type[]" value="<?=MaterialFile::MATERIAL_TYPE_IMAGE?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                                 <div class="item clearfix">
+                                     <span>视频</span>
+                                     <label class="checkbutton pull-right ">
+                                         <input type="checkbox" name="material_type[]" value="<?=MaterialFile::MATERIAL_TYPE_VIDEO?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                                 <div class="item clearfix">
+                                     <span>文档</span>
+                                     <label class="checkbutton pull-right ">
+                                         <input type="checkbox" name="material_type[]" value="<?=MaterialFile::MATERIAL_TYPE_TEXT?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                             </div>
+                             <div class="choice_item material-modal-right-input right-material-file">
+                                         <p>标签
+                                           <span class="allChk">全选</span>
+                                           <input type="hidden" name="material_type[]" value="">
+                                          </p>
+                                 <label for="" style="display:block">
+                                     <input  class="form-control" type="text" placeholder="输入标签搜索" name="tag" onchange="changeMateroalForm();">
+                                 </label>
+                                 <div class="label_selct">
+                                     <?php if (!empty($jwt['tag_list']) && is_array($tag_list)) :?>
+                                     <?php foreach ($jwt['tag_list'] as $v) :?>
+                                     <div class="label_item clearfix">
+                                         <span class=""></span>
+                                                 <span label_name><?=$v['name'] ?? ''?></span>
+                                         <label class="checkbutton pull-right ">
+                                            <input type="checkbox" name="tags[]" value="<?=$v['tag_id']?>" onchange="changeMateroalForm();">
+                                            <i></i>
+                                         </label>
+                                     </div>
+                                         <?php endforeach;?>
+                                     <?php endif;?>
+                                     </div>
+                                 <div class="not_label clearfix">
+                                         <span>未加标签</span>
+                                         <label class="checkbutton pull-right ">
+                                            <input type="checkbox" name="untag" value="1" onchange="changeMateroalForm();">
+                                            <i></i>
+                                         </label>
+                                 </div>
+                             </div>
+                         </form>
+                 </div>
+                </div>
+                </div>
+                        <div class="modal-footer">
+                            <div class="page_material"></div>
+                            <button style="display: none;" href="javascript:;" onclick="allCategory(true);" type="button" class="btn btn-default backAllCategory">返回</button>
+                            <button type="button" modal-action="confirm-material" class="btn btn-primary">确认</button>
+                        </div>
+            </div>
+        </div>
+    </div>

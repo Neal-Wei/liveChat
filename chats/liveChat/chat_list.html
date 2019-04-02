@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>聊天记录列表</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<link rel="stylesheet" href="../plugins/datepicker/daterangepicker.css" />
+
+<body>
+        <div class="chat_lsit row">
+            <!-- 左边 -->
+            <div class="col-lg-9 col-md-9 col-sm-9 chat_list_left">
+                <div class="chat_filter">
+                    <!-- 日期 -->
+                    <div class="form-control" id="date_all">
+                        <span style="display:inline-block;padding-right:5px;">
+                            <span>所有日期</span>
+                        </span>
+                        <input type="hidden" name="search_time" value="">
+                    </div> 
+                    <!-- 最新到最旧 -->
+                    <select name="version_list" class="form-control">
+                        <option value="0">从最新到最旧</option>
+                        <option value="1">从最旧到最新</option>
+                    </select>
+                    <!-- 全选删除 -->
+                    <div class="chat_delete pull-right mr15">
+                        <label class="checkbutton">
+                            <input type="checkbox" name="all_chat_checked" id="delete-all">
+                            <i></i>
+                            <span style="vertical-align: middle;">全选</span>
+                        </label>
+                        <a class="chat_del_batch ml10" style="vertical-align: middle;cursor: pointer; display: none">删除</a>
+                    </div>
+                </div>
+                <div class="chat_list_item">
+                    <div class="chat_item">
+                        <div class="chat_item_img">
+                            <img src="img/kobe1.jpg" alt="">
+                            <i class="icon_socials icon_social border_radius icon-twitter"></i>
+                        </div>
+                        <div class="chat_content">
+                                <span class="bot"></span>
+                                <div class="chat_dialog pb15">123123123143534</div>
+                                <div class="chat_list_msg">
+                                    <span>艾娟和liuzhirui6</span>  对话
+                                    <span>星期一</span>,
+                                    <span>2018年5月28日 5:01</span>
+                                    <span class="unread">未读</span>
+                                    <div class="pull-right chat_check">
+                                        <a href="" class="check_dialog mr10"> 查看对话</a>
+                                        <label class="checkbutton displayNone">
+                                            <input type="checkbox" name="chat_list_chk">
+                                            <i></i>
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                        </div>
+                    </div>
+                    <div class="chat_item">
+                            <div class="chat_item_img">
+                                <img src="img/kobe1.jpg" alt="">
+                                <i class="icon_socials icon_social border_radius icon-twitter"></i>
+                            </div>
+                            <div class="chat_content">
+                                    <span class="bot"></span>
+                                    <div class="chat_dialog pb15">123123123143534</div>
+                                    <div class="chat_list_msg">
+                                        <span>艾娟和liuzhirui6</span>  对话
+                                        <span>星期一</span>,
+                                        <span>2018年5月28日 5:01</span>
+                                        <span class="unread">未读</span>
+                                        <div class="pull-right chat_check">
+                                            <a href="" class="check_dialog mr10"> 查看对话</a>
+                                            <label class="checkbutton displayNone">
+                                                <input type="checkbox" name="chat_list_chk">
+                                                <i></i>
+                                            </label>
+                                        </div>
+                                        
+                                    </div>
+                            </div>
+                        </div>
+                </div> 
+            </div>
+            <!-- 右边 -->
+            <div class="col-lg-3 col-md-3 col-sm-3 chat_list_right">
+                <div class="chat_filter_list">
+                    <div class="chat_unread">
+                        <h2>90条</h2>
+                        <p class="pt10" style="font-size: 16px;">未读</p>
+                    </div>
+                    <div class="social_chat">
+                        <div class="social_account">
+                            <p>社媒账号</p>
+                            <ul>
+                                <li>
+                                    <span style="vertical-align: middle"><i class="icon_social icon-twitter icon_social_w" ></i> <span class="social_name ellipsis">yojom</span> </span>
+                                    <label class="checkbutton pull-right">
+                                        <input type="checkbox" name="chat_list_chk">
+                                        <i></i>
+                                    </label>
+                                </li>
+                                <li>
+                                    <span style="vertical-align: middle"><i class="icon_social icon-twitter icon_social_w" ></i> <span class="social_name ellipsis">库克</span> </span>
+                                    <label class="checkbutton pull-right">
+                                        <input type="checkbox" name="chat_list_chk">
+                                        <i></i>
+                                    </label>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <div class="msg_type">
+                            <p>消息类型</p>
+                            <ul>
+                                <li>
+                                    <span style="vertical-align: middle"><i class="icon_social icon-private-letter icon_social_w" ></i> <span class="social_name ellipsis">私信</span> </span>
+                                    <label class="checkbutton pull-right">
+                                        <input type="checkbox" name="chat_list_chk">
+                                        <i></i>
+                                    </label>
+                                </li>
+                                <li>
+                                    <span style="vertical-align: middle"><i class="icon_social icon-live-chat icon_social_w"></i> <span class="social_name ellipsis">即时聊天</span> </span>
+                                    <label class="checkbutton pull-right">
+                                        <input type="checkbox" name="chat_list_chk">
+                                        <i></i>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+            
+</body>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/moment.min.js"></script>
+<script type="text/javascript" src="../plugins/datepicker/daterangepicker.js"></script>
+<script>
+    
+    $(function(){
+    
+        // 全选
+        $('.chat_lsit').on('click','#delete-all',function(){
+            var input = $(".chat_list_item .chat_item .chat_check").find(".checkbutton input")
+            if($(this).is(":checked")){
+                input.prop("checked","checked")
+                input.closest(".checkbutton").addClass("displayInlineBlock")
+                $(".chat_del_batch").show()
+            }else{
+                input.closest(".checkbutton").removeClass("displayInlineBlock")
+                input.removeAttr("checked")
+                $(".chat_del_batch").hide()
+            }
+        })
+        $('.chat_lsit').on('click','.chat_list_item .chat_check .checkbutton input',function(){
+            chat_batch()
+            if($(this).is(":checked")){
+                $(this).closest(".checkbutton").addClass("displayInlineBlock")
+                $(".chat_del_batch").show()
+            }else{
+                
+                $(this).closest(".checkbutton").removeClass("displayInlineBlock")
+                $(".chat_del_batch").hide()
+            }
+        })
+        // 单选
+        function chat_batch(){
+            var input_chk = $(".chat_list_item .chat_item .chat_check").find(".checkbutton input:checked").length;
+            var input = $(".chat_list_item .chat_item .chat_check").find(".checkbutton input").length;
+            if(input_chk<input){
+                $("#delete-all").prop("checked",false)
+            }else{
+                $(".chat_del_batch").show()
+                $("#delete-all").prop("checked",true)
+            }
+        }
+    })
+</script>
+<script type="text/javascript">
+    //时间插件初始化
+
+      init()
+      function init(){
+        //定义locale汉化插件
+        var locale = {
+            "format": 'YYYY/MM/DD HH:mm',
+            "separator": " -222 ",
+            "applyLabel": "应用",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel":"结束时间",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1,
+            "opens":"left"
+        };
+        $('#date_all').daterangepicker(
+            {
+                timePicker:true	,
+                'locale': locale,
+                //汉化按钮部分
+                ranges: {
+                    '最近24小时'  : [moment().subtract(1, 'days'), moment()],
+                    '过去7天' : [moment().subtract(7, 'days'), moment()],
+                    '过去14天': [moment().subtract(14, 'days'), moment()],
+                    '过去30天': [moment().subtract(30, 'days'), moment()],
+                    '过去90天'  : [moment().subtract(90, 'days'), moment()],
+                    '所有时间'  : moment()
+                },
+                startDate:$("[name='site_time']").val(),
+                endDate:moment()
+            },
+            //回调函数
+            function (start, end) {
+                if (start.format('YYYY-MM-DD HH:mm') === end.format('YYYY-MM-DD HH:mm')) {
+                    var date = "";
+                    $('#date_all span').html("所有日期")
+                } else {
+                    var date = start.format('YYYY-MM-DD HH:mm') + ' - ' + end.format('YYYY-MM-DD HH:mm');
+                    $('#date_all span').html(start.format('YYYY-MM-DD HH:mm') + ' - ' + end.format('YYYY-MM-DD HH:mm'))
+                }
+            
+            }
+        );
+    };
+</script>
+</html>

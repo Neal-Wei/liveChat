@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>即时聊天</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+#loginWrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(5, 5, 5, .6);
+    text-align: center;
+    color: #fff;
+    display: block;
+    padding-top: 200px;
+}
+</style>
+<body>
+    <div class="live_chat" style="border-color: rgb(45, 142, 242); position: fixed; z-index: 999; height: 100%; opacity: 1; right: 0px; left: 0px; top: 0px; width: 1920px;">
+        <div class="live_chat_header">
+            <div class="live_chat_header_logo">
+                <span>我是机器人 The one </span>
+            </div>
+            <div class="live_chat_header_nav">
+                <a class="live_chat_icon_max live_chat_icon_nor">
+                    <em class="live_chat_icon"></em>
+                </a>
+                <a class="live_chat_icon_clo">
+                    <em class="live_chat_icon"></em>
+                </a>
+            </div>
+        </div>
+        <div class="live_chat_content">
+            <div class="live_chat_area">
+                <div class="live_chat_area_item">
+                    <div class="live_chat_more"><a>查看更多</a></div>
+                    <div class="live_chat_area_chat clearfix">
+                        <!-- 回复 -->
+                        <!-- <div class="chat_replay">
+                            <div class="chat_heading">
+                                <img src="img/kobe1.jpg" alt="">
+                            </div>
+                            <div class="chat_name">
+                                    我 2018年5月28日 09:21:21
+                            </div>
+                            <div class="chat_msg">
+                                <span class="chat_msg_txt">你说啥</span>
+                            </div>
+                        </div>
+                        提问 
+                        <div class="chat_ask clearfix">
+                            <div class="chat_heading">
+                                <img src="img/kobe2.jpg" alt="">
+                            </div>
+                            <div class="chat_name">
+                                    哆啦A梦 2018年5月28日 09:21:21
+                            </div>
+                            <div class="chat_msg clearfix">
+                                <span class="chat_msg_txt pull-right">你瞅啥</span>
+                                
+                            </div>
+                            <p class="chat_msg_err pull-right">发送失败，<a>重新发送</a> <span style="color:#999">2018年5月28日 09:21:21</span></p>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- 回复 -->
+                <div class="live_chat_edit">
+                    <div class="live_chat_num clearfix"> <div class="pull-right"><span class="get_num">0</span>/<span class="chat_num">1000</span></div></div>
+                    <div class="live_chat_edit_input">
+                            <textarea class="live_chat_textarea" placeholder="输入回复消息"></textarea>
+                    </div>
+                    <div class="live_chat_edit_sub">
+                        <a class="live_chat_pic" data-toggle="modal" data-target="#MaterialChooseModal">图片</a>
+                        <a class="live_chat_link" data-toggle="modal" data-target="#publishCustomChooseModal" >添加链接</a>
+                        <span class="btn btn-send" id="btn-send">发送</span>
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div id="loginWrapper">
+            <p id="info">connecting to server...</p>
+            <div id="nickWrapper">
+                <input type="text" placeHolder="nickname" id="nicknameInput" />
+                <input type="button" value="OK" id="loginBtn" />
+            </div>
+        </div>
+    </div>
+
+ <!-- 选择素材  Modal -->
+<div class="modal fade MaterialChooseModal material_box" id="MaterialChooseModal" tabindex="-1" role="dialog" aria-labelledby="MaterialChooseModal" data-type="1">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="MaterialChooseModalTitle">素材库</h4>
+                    <div class="input-item" style="cursor:pointer;position: absolute;top:10px;right: 70px;">
+                        <div class="form-control material-modal-right-input right-material-file" id="daterange_btn_header" name="daterange-btn_enquiries" style="cursor:pointer">
+                                <span style="display:inline-block;padding-right:5px;">
+                                    <span style="color:#aaa;"><?= $jwt['selected_date']['search_date'] ?: '所有日期'?></span>
+                                </span>
+                                <input type="hidden" value="<?= $jwt['selected_date']['search_date'] ?? ''?>" name="search_date">
+                                <i class="fa fa-caret-down"></i>
+                            </div>
+                            <div class="input-item material-modal-right-input right-material-folder">
+                                <input type="text" class="form-control" value="<?= $jwt['selected_keywords'] ?? ''?>" name="material-keywords" placeholder = "输入文件/文件夹名">
+                        </div>
+                    </div>
+    
+                </div>
+                <div class="modal-body row">
+            <div class="col-md-9 contentMaterbox_left">
+                <div class="nolist" style="display:none;">
+                  您还没有开通全网通网站，开通网站后将可以调用网站内容。
+                  <a href="#" class="btn btn-default">去开通</a>
+                </div>
+                <div class="release material-item-len" style="max-height:450px;overflow: auto; ">
+        
+                </div>
+              </div>
+    
+    
+              <div class="col-md-3 contentMaterbox_right">
+                  <div class="choice_doc">
+                     <div class="alreadyChk">已选<span>0</span>条</div>
+                         <form action="" id="material-modal-right-form">
+                             <input type="hidden" name="_csrf" value="<?= Yii::$app->request->getCsrfToken(); ?>">
+                             <input type="hidden" name="site_id" value="">
+                                     <input type="hidden" name="class_id" value="">
+                             <input type="hidden" name="page" value="">
+                             <input type="hidden" name="size" value="">
+                                     <input type="hidden" name="start_time" value="<?= $jwt['selected_date']['start_time'] ?? ''?>">
+                                     <input type="hidden" name="end_time" value="<?= $jwt['selected_date']['end_time'] ?? ''?>">
+                                     <input type="hidden" name="keywords" value="<?= $jwt['selected_keywords'] ?? ''?>">
+                             <div class="choice_item material-modal-right-input right-material-file right-material-folder">
+                                 <p>来源</p>
+                                         <div class="item clearfix">
+                                     <span>全网通上传</span>
+                                    <label class="checkbutton pull-right ">
+                                        <input type="checkbox" name="source_type[]" value="<?=MaterialFile::SOURCE_TYPE_GMS?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                    </label>
+                                     
+                                 </div>
+                                 <div class="item clearfix">
+                                     <span>聚外通上传</span>
+                                     <label class="checkbutton pull-right ">
+                                        <input type="checkbox" name="source_type[]" value="<?=MaterialFile::SOURCE_TYPE_JWT?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                             </div>
+                             <div class="choice_item material-modal-right-input right-material-file">
+                                         <p class="type_choice">类型
+                                           <span class="allChk">全选</span>
+                                           <input type="hidden" name="material_type[]" value="">
+                                          </p>
+                                        
+                                 <div class="item clearfix">
+                                     <span>图片</span>
+                                     <label class="checkbutton pull-right ">
+                                        <input type="checkbox" name="material_type[]" value="<?=MaterialFile::MATERIAL_TYPE_IMAGE?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                                 <div class="item clearfix">
+                                     <span>视频</span>
+                                     <label class="checkbutton pull-right ">
+                                         <input type="checkbox" name="material_type[]" value="<?=MaterialFile::MATERIAL_TYPE_VIDEO?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                                 <div class="item clearfix">
+                                     <span>文档</span>
+                                     <label class="checkbutton pull-right ">
+                                         <input type="checkbox" name="material_type[]" value="<?=MaterialFile::MATERIAL_TYPE_TEXT?>" onchange="changeMateroalForm();">
+                                        <i></i>
+                                     </label>
+                                 </div>
+                             </div>
+                             <div class="choice_item material-modal-right-input right-material-file">
+                                         <p>标签
+                                           <span class="allChk">全选</span>
+                                           <input type="hidden" name="material_type[]" value="">
+                                          </p>
+                                 <label for="" style="display:block">
+                                     <input  class="form-control" type="text" placeholder="输入标签搜索" name="tag" onchange="changeMateroalForm();">
+                                 </label>
+                                 <div class="label_selct">
+                                     <?php if (!empty($jwt['tag_list']) && is_array($tag_list)) :?>
+                                     <?php foreach ($jwt['tag_list'] as $v) :?>
+                                     <div class="label_item clearfix">
+                                         <span class=""></span>
+                                                 <span label_name><?=$v['name'] ?? ''?></span>
+                                         <label class="checkbutton pull-right ">
+                                            <input type="checkbox" name="tags[]" value="<?=$v['tag_id']?>" onchange="changeMateroalForm();">
+                                            <i></i>
+                                         </label>
+                                     </div>
+                                         <?php endforeach;?>
+                                     <?php endif;?>
+                                     </div>
+                                 <div class="not_label clearfix">
+                                         <span>未加标签</span>
+                                         <label class="checkbutton pull-right ">
+                                            <input type="checkbox" name="untag" value="1" onchange="changeMateroalForm();">
+                                            <i></i>
+                                         </label>
+                                 </div>
+                             </div>
+                         </form>
+                 </div>
+                </div>
+                </div>
+                        <div class="modal-footer">
+                            <div class="page_material"></div>
+                            <button style="display: none;" href="javascript:;" onclick="allCategory(true);" type="button" class="btn btn-default backAllCategory">返回</button>
+                            <button type="button" modal-action="confirm-material" class="btn btn-primary">确认</button>
+                        </div>
+            </div>
+        </div>
+    </div>
+    <!-- 选择商品  Modal -->
+<div class="modal fade publishCustomChooseModal" id="publishCustomChooseModal" tabindex="-1" role="dialog" aria-labelledby="publishCustomChooseModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="publishCustomChooseModalLabel">选择商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="nolist" style="display:none;">
+                        您还没有开通全网通网站，开通网站后将可以调用网站内容。
+                        <a href="#" class="btn btn-default">去开通</a>
+                    </div> 
+                    <div class="release">                    
+                        <form class="form-horizontal" action="/publish/send-cms" method="post" data-content="cms-form" id="publishCustomChooseModalForm">
+                            <input type="hidden" name="current[method]" value="1">
+                            <input type="hidden" name="_csrf" value="<?= Yii::$app->request->getCsrfToken(); ?>" />
+                            <div data-content="hidden-account"></div>
+    
+                            <div class="form-group row clearfix">
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="select_site" name="current[site_id]">
+                                        <option value="">选择网站</option>
+                                        <?php if (!empty($jwt['site'])) :?>
+                                        <?php foreach ($jwt['site'] as $key=>$value) { ?>
+                                        <?php if ($value['site_url']) { ?>
+                                        <option value="<?= $value['site_id']; ?>" <?= $key=='0' && $value['package_type']=='2'?' selected = "selected"':''?>><?= $value['site_url']; ?></option>
+                                        <?php }} ?>
+                                        <?php endif;?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3" id="publishCustomChooseModal_select">
+                                    <select class="form-control" id="select_model">
+                                        <!-- <option value="0">选择发布类型</option> -->
+                                        <option value="1">产品内容</option>
+                                        <option value="-2">新闻内容</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4" id="publishCustomChooseType">                                
+                                    <select class="form-control" id="select_model_type">
+                                        <option value="1" selected="selected">原创内容</option>
+                                        <option value="2">AI生成</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3" id="treeCat" style="position: relative;display:none">
+                                    <div id="treeInput" style="position: relative;padding:0 10px 0 7px;width:100%;line-height:34px;white-space:nowrap;overflow: hidden;cursor: pointer;" class="form-control Ellipsis" >
+                                        <span>请选择所属分类</span>
+                                        <i class="icontree icon-xiajiantou pull-right" style="margin-top:8px;"></i>
+                                    </div>
+                                    <div class="treebox whiteBack" style="width:100%">
+                                        <div class="input-group">
+                                            <input name="cms_name" class="form-control mt0" value="" placeholder="标题名称" type="text" id="treeSearch" autocomplete="off">
+                                            <span class="input-group-btn">
+                                                <button  class="btn btn-default" type="button">搜索</button>
+                                            </span>
+                                        </div>
+                                        <div id="treeUl">
+                    
+                                        </div>
+                                        <div class="treeBtn">
+                                            <span class="pd10 treeActive" style="color: #1890FF">确定</span>
+                                            <span class="pd10 treeRemove" style="color: #475669;">取消</span>
+                                        </div>
+                                    </div>
+                                    <select class="" multiple name="cms_category_id[]"  style="width:0;height:0;opacity:0" id="cat-box">
+                                    </select>
+    
+                                </div>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="select_limit">
+                                        <option value="20">每页20条</option>
+                                        <option value="30" selected="selected">每页30条</option>
+                                        <option value="60">每页60条</option>
+                                        <option value="80">每页80条</option>
+                                        <option value="100">每页100条</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="table-responsive" id="select_cms">
+                                <table class="table table-condensed table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width:55px;">
+                                            </th>
+                                            <th>产品图片</th>
+                                            <th style="min-width:100px">产品标题</th>
+                                            <th>产品简述</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+    
+                                    </tbody>
+                                </table>
+                                <div class="loading" style="display: none;" data-content="loading">
+                                    <span class="icon-spinner3" id="loadIcon"></span>
+                                    <p>正在加载...</p>
+                                </div>
+                            </div> 
+    
+                            <div id="pagination_9"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/hichat.js"></script>
+<script>
+    $(function(){
+        // 计算输入框输入多少个字
+        $('.live_chat_edit .live_chat_textarea').on('input propertychange', function(){
+            var val = $(this).val();
+            var len = val.length;
+            var num = parseInt($(".live_chat_edit .chat_num").text())
+            var get_num = $(".live_chat_edit .get_num")
+            var total = num-len;
+            get_num.text(total)
+        })
+    })
+
+
+</script>
+<script>
+    var treeCmscategoryId = [];
+    $(".live_chat_link").click(function(){
+        fetchCms(1)
+    })
+    function fetchCms(page) {
+        console.log(11);
+    $("[data-content='loading']").show();
+    $("[page-id]").hide();
+
+            var model = [];
+            var type = $("#select_model_type :selected").val();
+            model.push($("#select_model").val());
+            var treeId = []
+            if($("#select_model_type option:selected").val() == "1"){
+                treeId =  treeCmscategoryId
+            }else{
+                treeId = [] 
+            } 
+            $.ajax({
+                url: '/publish/fetch-cms',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    category_id:treeId,
+                    page: page, 
+                    type:  type,
+                    model: $("#select_model").val(),
+                    site_id: $("#select_site").val(),
+                    limit: $("#select_limit").val(),
+                    _csrf: "<?= Yii::$app->request->getCsrfToken(); ?>"
+                },
+                success: function(res) {
+                    if (!res.status) {
+
+                        $("[data-content='loading']").hide();
+                        var i = 0;
+                        $.each(res.data.list, function(con, val){
+                            i ++;
+                            var row = '<tr page-id="' + page + '">';
+                            row += '<th scope="row" style="min-width:55px;"><div class="checkbox"><label><input type="radio" name="current[id][' + i + ']"></label></div></th>';
+                            row += '<td><img src="' + val["cms_pic"] + '" width="75"></td>';
+                            row += '<td><div data-content="name">' + val["cms_name"] + '</div><input type="hidden" name="current[cms_name][' + i + ']" value="' + val["cms_name"].replace(/\"/g, "'") + '"><input type="hidden" name="current[cms_id][' + i + ']" value="' + val["cms_id"] + '"><input type="hidden" name="current[cms_pic][' + i + ']" value="' + val["cms_pic"] + '"></td><td><div data-content="longtitle" style="max-height:60px;overflow:hidden;">' + val["cms_longtitle"] + '</div><input type="hidden" data-content="url" value="' + val["cms_url_identify"] + '"><input type="hidden" data-content="description" value="' + val["cms_meta_description"] + '"><input type="hidden" data-content="keyword" value="' + val["cms_meta_keyword"] + '"></td></tr>';
+                            $("#select_cms tbody").append(row);
+
+                            $("#select_all").unbind("click").click(function(){
+                                $("[name^='current[id]']").prop("checked", $(this).prop("checked"));
+                            });
+                        });
+
+                        if($.find('#pagination_9').length == 0){
+                            $('#select_cms').after('<div id="pagination_9"></div>');
+                        }
+
+                    //分页
+                        $("#pagination_9").pagination({
+                            css: 'css-2',
+                            totalPage: res.data.page.total,    
+                            showPageNum: 5, 
+                            firstPage: '首页',  
+                            previousPage: '上一页',   
+                            nextPage: '下一页',   
+                            lastPage: '尾页',    
+                            skip: '跳至',    
+                            confirm: '确认',   
+                            refresh: '刷新',    
+                            totalPageText: '共{}页',    
+                            isShowFL: false,   
+                            isShowPageSizeOpt: false,    
+                            isShowSkip: false,  
+                            isShowRefresh: false,  
+                            isShowTotalPage: true,    
+                            isResetPage: false,     
+                            callBack: function(currPage, pageSize) {
+                                console.log('currPage:' + currPage + '     pageSize:' + pageSize);
+                                fetchCms(currPage);
+                            }
+                        });
+
+                        // 选择商品列表--单选
+                        $("#select_cms [name^='current[id]']").click(function(event) {
+                            $("[name^='current[id]']").prop("checked", false);
+                            $(this).prop("checked", true);   
+                        });
+                        
+                        var _input_textarea = $('.customize .textarea textarea').val();
+                        $('.customize .textarea textarea').change(function(){
+                            _input_textarea = $('.customize .textarea textarea').val();
+                        });
+                        // 点击选择商品模态框确认键  添加输入内容框文字内容、图片src以及input的value
+                        $("#publishCustomChooseModal .modal-footer .btn-primary").click(function(){
+                            $("#select_cms tr").each(function(index, el) {
+                                //var _input_title = $('.customize .textarea_input input');
+                                var _input_title = $('.customize #title_input textarea');
+                                var _textarea = $('.customize .textarea textarea');
+                                var _img = $('#upload-1 .webuploader-pick img');
+                                var _input = _img.parent().parent().siblings('input');
+                                if ($(this).find("[name^='current[id]']").prop("checked")) {//$(this)是判断被选中对象对应的tr
+                                    if(mediaTitle()){
+                                        _input_title.val($(this).find('[data-content="name"]').text())
+                                    }
+                                    if (showDesc()) {
+                                        $('.customize #title_input2 textarea').val($(this).find('[data-content="description"]').text())
+                                    }
+                                    if (showKeywords()) {
+                                        $('.customize #title_input3 input').val($(this).find('[data-content="keyword"]').text())
+                                    }
+
+                                    _textarea.val($(this).find('[data-content="longtitle"]').text());
+                                    _img.attr("src", $(this).find('img').attr("src"));
+                                    _input.val($(this).find('img').attr("src"));
+                                    $("[data-content='custom-form'] [name='current[site_id]']").val($("[data-content='cms-form'] [name='current[site_id]']").val());
+                                    $("[data-content='custom-form'] [name='current[cms_id]']").val($(this).find("[name^='current[cms_id]']").val());
+                                    $("[data-content='custom-form'] [name='current[link]']").val("http://" + $("#select_site option:selected").text() + "/" + $(this).find('[data-content="url"]').val());
+                                    //内容框显示勾选商品标题、链接
+                                    $('.textarea textarea').val(_input_textarea + $('.textarea textarea').val()+"(" +$("[data-content='custom-form'] [name='current[link]']").val()+ ")"); 
+                                    GLOBAL_CONTENT = _textarea.val();
+                                };
+                            });
+                            $("#publishCustomChooseModal").modal("hide");
+                            wordStatic($('.textarea textarea')[0]);
+                        });
+                    } else {
+                        $("#select_cms tbody").html("");
+                        $("[data-content='loading']").hide();
+                        var row = '<tr><td colspan="4"><p style="text-align: center;">暂无内容</p></td></tr>';
+                        $("#select_cms tbody").append(row);
+                    }
+                    getProductDisabled(false); //取消禁止
+                },
+                error: function() {
+                    $("#select_cms tbody").html("");
+                    $("[data-content='loading']").hide();
+                    var row = '<tr><td colspan="4"><p style="text-align: center;">暂无内容</p></td></tr>';
+                    $("#select_cms tbody").html(row);
+                    getProductDisabled(false); //取消禁止
+                }
+            });
+
+}
+
+//分类
+$("#treeInput").click(function(e){
+        e.stopPropagation();
+        var target  = e.target;
+        if(!$(target).hasClass("category_del")){
+            if(!this.bol)this.bol = false
+            if(!this.bol){
+                treeToggle('on')
+                // if($("#treeUl ul").children().length  ===  0){
+                    category()
+                // }else{
+                //     $(".loading_public").remove();
+                // }
+            }else{  
+                treeToggle('off')
+            }
+        }      
+              
+    })
+
+    function category(){
+        var site_id = $("#select_site[name='current[site_id]']").val();
+        var model = $("#select_model").val() === undefined ? $("#select_model").val() : 1;
+        var type = $("#select_model_type").val() === undefined ? $("#select_model_type").val() : 1 ;
+        var data = {
+            model: model,      
+            type: type,
+            // site_id: 3759,
+            site_id: site_id,
+            _csrf: "<?= Yii::$app->request->getCsrfToken(); ?>"
+        }
+        $("#treeUl").append('<div class="loading_public"><img src="../assets/images/loading.gif" style="width:100%;height:100%;display:block"> </div>')
+            $.ajax({
+                type: "post",
+                url: "/publish/get-categorys",
+                data: data,
+                dataType: "json",
+                success: function (res) {
+                    var data = res.data ;
+                    if(res.status === 1){
+                        $(".loading_public").remove();
+                        treeplugIn(data)
+                    }
+                },
+                error:function(err){
+                    $(".loading_public").remove();
+                    alert(err.mag)
+                }
+
+            });
+    }
+    function getProductDisabled(status){
+        $("#publishCustomChooseModalForm").find("input, select, textarea, button").attr('disabled', status ? true : false);
+    }
+    function treeplugIn(dataObj){
+     var obj = {}
+       // 树形插件
+       function treeUl(json){
+            if(!Array.isArray(json)||json.length<=0){
+                return $('<div style="text-align:center"><img src="../assets/images/nodata.png" style="width: 80px;height: 80px;display: block;margin: auto;margin-top: 50px;">暂无数据</div>')
+            }
+            var domhtml = $('<ul>')
+            json.forEach(function (item,index,arr) {
+                var html = '<li class="item">'
+                if(item.category_fid=='0'){
+                    html+= '<i  class="treeIcon topUp"></i>'
+                }else{
+                    html+= '<i  class="treeIconlevelUp"></i>'
+                }
+                html+= '<label class="Ellipsis item_checkbox checkbutton" title="'+item.category_name+'"><input type="checkbox" name="" value="'+item.category_id+'"><i></i><span class="item_text" style="vertical-align: middle;margin-left:5px;">'+item.category_name+'</span></label></li>'
+                var div = $(html)
+                if(Array.isArray(item.child_data)&&item.child_data.length){
+                    div.append(treeUl(item.child_data))
+                }
+                domhtml.append(div)
+            })
+            return domhtml;
+        }
+        $("#treeUl").html(treeUl(dataObj))
+
+        if(treeCmscategoryId.length){
+            var str = []
+            var Input = $('#treeUl .checkbutton input')
+            var trrBol = true
+            $('#cat-box').html('')
+            for(var i=0;i<treeCmscategoryId.length;i++){
+               for(var j=0;j<Input.length;j++){
+                   if(treeCmscategoryId[i]== Input.eq(j).val()){
+                       trrBol = false;
+                       var txt = Input.eq(j).prev().text();
+                       str.push(txt);
+                       Input.eq(j).attr('checked','true').parent().addClass('treeLabelActive');
+                       $('#cat-box').append($('<option value="'+Input.eq(j).val()+'" selected="selected"></option>'))
+                   }
+               }
+            }
+            // category()
+        }
+
+        //子分类收缩
+        $("#treeUl").off('click').on('click','i.treeIcon',function(e){
+
+                var _this = $(this)
+                var ul = $(this).closest('.item').children('ul');
+                if(!this.topBol){
+                    _this.addClass('topDown').removeClass('topUp');
+                    ul.hide();
+                    this.topBol = true
+                }else{
+                    _this.addClass('topUp').removeClass('topDown');
+                    ul.show()
+                    this.topBol = false;
+                }
+
+        })
+
+       
+        //监听input checked变化;为true添加选中样式
+        $('#treeUl .item label .magic-checkbox').on('change',function(){
+            if(this.checked){
+                $(this).parent().addClass('treeLabelActive')
+            }else{
+                $(this).parent().removeClass('treeLabelActive')
+            }
+        })
+        
+        $('.treeBtn').off('click').on('click',function (e) {
+            var e = window.event||e
+            var target = e.target||e.srcElement
+            var tag = $(target)
+            var checked = $('#treeUl').find('input');
+            if(tag.hasClass('treeActive')){
+                var _l = true
+                // 获取分类选中已有的input
+                $('#treeUl .item input').each(function (i,dom) {
+                   if(!$(dom).val()){
+                       _l = false
+                   }
+                })
+                treeCmscategoryId = []
+                compileModiaId = obj.valId
+                var checkboxstr= []
+                $('#cat-box').html('')
+                $('#treeUl  .item input:checked').each(function (i,dom) {
+                    checkboxstr.push($(dom).parent().text())
+                    treeCmscategoryId.push($(dom).val())
+                    $('#cat-box').append($('<option value="'+$(dom).val()+'" selected></option>'))
+                    _l  = false
+                })
+                if($('#treeUl li').length === 0){
+                    checkboxstr.push( '请选择所属分类');
+                }
+                $('#treeInput>span').text(checkboxstr.join(','))
+                $('#select_cms').next('div').remove();
+                $("#select_cms tbody").html("");
+                $("#select_all").prop("checked",false);
+                fetchCms(1)
+                treeToggle('off')
+            }else if(tag.hasClass('treeRemove')){
+                treeToggle('off')
+            }
+        })
+        var val =''
+        $('.treebox button').off('click').on('click',function (e) {
+            val = $('.treebox #treeSearch').val()
+            each(val)
+        })
+        $('.treebox #treeSearch').off('keydown').on('keydown',function (e) {
+            val = $('.treebox input[type="text"]').val()
+            if(e.keyCode === 13){
+                each(val)
+            }
+            if(e.keyCode === 8){
+                $('.treebox .item').each(function (i,dom) {
+                    $(dom).show()
+                })
+            }
+        })
+        function each(v){
+            $('.treebox .item_checkbox').each(function (i,dom) {
+                var label = $(dom).find('>.item_text').text()
+                if(label.indexOf(v)!=-1){
+                    $(dom).show()
+                    $(dom).prev().show()
+                }else{
+                    $(dom).hide()
+                    $(dom).prev().hide()
+                }
+            })
+        }
+    }
+    //所属分类获取焦点,所属分类离开焦点
+    function treeToggle(str){
+        if(str === 'on'){
+            $('#treeInput')[0].bol = true;
+            $('.treebox').addClass('treeboxOn').removeClass('treeboxOff')
+        }else if(str === 'off'){
+            $('#treeInput')[0].bol = false;
+            $('.treebox').addClass('treeboxOff').removeClass('treeboxOn')
+        }
+    }
+
+function getProductDisabled(status){
+    $("#publishCustomChooseModalForm").find("input, select, textarea, button").attr('disabled', status ? true : false);
+}
+</script>
+<script>
+    function changeMateroalForm(){
+        if ($("#material-modal-right-form").find("input[name='class_id']").val() > 0) {
+            //获取文件
+            selectCategory($("#material-modal-right-form").find("input[name='class_id']").val(), 1);
+        } else {
+            allCategory(true);
+        }
+    }
+
+    // 选中文件夹，返回文件夹内文件列表
+var pageSize = 10;
+var pageNumber = 1;
+function selectCategory(cate_id, page,pageNumber,pageSize) {
+    var _obj = $("div#MaterialChooseModal div.release");
+    if (page > 0 && $(".material-file-page-".page).length > 0) {
+        return false;
+    }
+    var $dl = $("#material-modal-right-form");
+    $dl.find("input[name='keywords']").val('');
+    $dl.find("input[name='site_id']").val($("#select_site").val());
+    $dl.find("input[name='class_id']").val(cate_id);
+    $dl.find("input[name='page']").val(pageNumber);
+    $dl.find("input[name='size']").val(pageSize);
+    var data = $dl.serialize();
+	$.ajax({
+		url: '/material/fetch-file',
+		type: 'post',
+		dataType: 'json',
+        data: data,
+		success: function(res) {
+			if (!res.status) {
+        $(".page_material").show()  
+          pageList({
+            total:res.data.listsCount,
+            pageSize:res.data.limit,
+            pageNumber:res.data.page,
+            name:$('.modal-footer .page_material'),
+            callback:function(pageNumber,pageSize){
+                selectCategory(cate_id, page,pageNumber,pageSize)
+            }
+        })
+                var selected_id_arr = selected_m_ids;
+                $('.backAllCategory').show();
+                _obj.empty();
+                _obj.append('<div class="clearfix"></div>');
+                var lists = res.data.lists;
+                $.each(lists, function(con, val){
+                    var row = '<div class="col-lg-3 col-md-4 col-sm-4 col-xs-6 material-file-item-len material-file-page-' + page + '" page-id="' + page + '" data-id="' + val["file_id"] + '"><label class="Material_item">';
+                    row += '<img src="' + val["file_path_img"] + '" alt="">';
+                    var title = '';
+                    var value = val["file_id"] + '||' + val["file_title"] + '||' + val["file_path"] + '||' + val["file_keyword"] + '||2';
+                    if(val['file_title'].length > 0){
+                        title = val['file_title'];
+                    }else{
+                        title = val['original_name'];
+                    }
+                    row += '<div class="title">' + title + '</div>';
+                    if ($.inArray(val["file_id"], selected_m_ids) != -1) {
+
+                        row += '<input value="' + value +'" name="current[material_file_id][]" type="checkbox" checked="checked">';
+                    } else {
+                        row += '<input value="' + value +'" name="current[material_file_id][]" type="checkbox">';
+                    }
+                    row += '</label></div>';
+                    _obj.append(row);
+
+                });
+                _obj.append('<div class="clearfix"></div>');
+            } else {
+                alert('该文件夹暂无内容');
+            }
+        },
+        error: function() {
+            alert('请求错误');
+        }
+
+    });
+}
+
+//返回文件夹列表
+function allCategory(p) {
+    var _obj = $("div#MaterialChooseModal div.release");
+    $('.backAllCategory').hide();
+    if (($(".material-folder-item-len").length > 0 && !p) || ($(".material-file-item-len").length > 0 && !p)) {
+        if ($(".material-file-item-len").length > 0) {
+            $('.backAllCategory').show();
+        }
+        return false;
+    }
+
+    if(p){
+        $(".page_material").children().empty()
+    }
+    var $dl = $("#material-modal-right-form");
+    $dl.find("input[name='site_id']").val($("#select_site").val());
+    $dl.find("input[name='class_id']").val(0);
+    var data = $dl.serialize();
+    $.ajax({
+        url: '/material/fetch-category',
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        success: function(res) {
+            if (!res.status) {
+                _obj.empty();
+                $.each(res.data.category, function(con, val){
+                    var value = val["folder_id"] + '||' + val["folder_name"] + '||nourl||nourl||1';
+                    var row = '<div class="col-lg-3 col-md-4 col-sm-4 col-xs-6 material-folder-item-len"><label class="Material_item get">';
+                    row += '<a href="javascript:;" onclick="selectCategory(' + val["folder_id"] + ', 1);">';
+                    row += '<img src="../assets/images/file.png" alt="">';
+                    row += '<div class="title">' + val["folder_name"] + '</div>';
+                    row += '</a>';
+                    row += '</label></div>';
+                    _obj.append(row);
+                });
+                $.each(res.data.file, function(con, val){
+                    var value = val["file_id"] + '||' + val["file_name"] + '||' + val["file_path"] + '||' + val["file_keyword"] + '||2';
+                    var row = '<div class="col-lg-3 col-md-4 col-sm-4 col-xs-6 material-folder-item-len" data-id="' + val["file_id"] + '"><label class="Material_item">';
+                    row += '<img src="'+ val["file_path"] + '">';
+                    if(val["file_title"].length > 0){
+                        row += '<div class="title">' + val["file_title"]  + '</div>';
+                    }else{
+                        row += '<div class="title">' + val["original_name"]  + '</div>';
+                    }
+                    row += '<input value="' + value +'" name="current[material_file_id][]" type="checkbox">';
+                    row += '</label></div>';
+                    _obj.append(row);
+                });
+                _obj.append('<div class="clearfix"></div>');
+            }
+        },
+        error: function() {
+            alert('请求错误');
+        }
+    });
+    $("#MaterialChooseModal").attr("data-type", 1);
+    $(".material-modal-right-input").hide();
+    $(".right-material-folder").show();
+}
+</script>
+</html>
